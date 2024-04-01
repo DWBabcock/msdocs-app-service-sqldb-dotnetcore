@@ -8,12 +8,15 @@ builder.Configuration.AddEnvironmentVariables().AddUserSecrets<Program>();
 // Add database context and cache
 builder.Services.AddDbContext<MyDatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+#if DEBUG
 builder.Services.AddDistributedMemoryCache();
-//builder.Services.AddStackExchangeRedisCache(options =>
-//{
-//    options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
-//    options.InstanceName = "SampleInstance";
-//});
+#else
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
+    options.InstanceName = "SampleInstance";
+});
+#endif
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
