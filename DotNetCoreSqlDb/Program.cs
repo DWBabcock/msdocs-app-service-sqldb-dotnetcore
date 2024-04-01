@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using DotNetCoreSqlDb.Data;
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables().AddUserSecrets<Program>();
+
 // Add database context and cache
 builder.Services.AddDbContext<MyDatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
